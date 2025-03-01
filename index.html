@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Website Generator</title>
+    <style>
+        /* General Styles */
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Neon Accent Colors */
+        :root {
+            --neon-blue: #00ffff;
+            --neon-green: #39ff14;
+            --neon-purple: #c77dff;
+        }
+
+        /* High Contrast Text */
+        h1, h2, h3, h4, h5, h6, p, a, span, li {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Navigation */
+        nav {
+            background-color: rgba(25, 25, 25, 0.9);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--neon-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--neon-blue);
+            color: #121212;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        section {
+            background-color: rgba(30, 30, 30, 0.7);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Images */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Interactive Elements */
+        .button {
+            background-color: var(--neon-green);
+            color: #121212;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block; /* Allows for margin/padding */
+            margin-top: 1rem;
+        }
+
+        .button:hover {
+            background-color: #2ecc71;
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(25, 25, 25, 0.9);
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            main {
+                grid-template-columns: 1fr; /* Stack sections vertically */
+            }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .progress-bar-fill {
+            height: 20px;
+            background-color: var(--neon-purple);
+            border-radius: 5px;
+            width: 0%; /* Initial width */
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Input Fields */
+        input[type="text"],
+        textarea {
+            width: calc(100% - 20px); /* Full width minus padding */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--neon-blue);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            box-sizing: border-box; /* Include padding and border in width */
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--neon-green);
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+            color: #000;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo" style="color: var(--neon-green); font-weight: bold; font-size: 1.5rem;">AI WebForge</div>
+        <ul>
+            <li><a href="#" aria-label="Home">Home</a></li>
+            <li><a href="#" aria-label="Features">Features</a></li>
+            <li><a href="#" aria-label="Dashboard">Dashboard</a></li>
+            <li><a href="#" aria-label="About">About</a></li>
+            <li><a href="#" aria-label="Contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <section>
+            <h1>Welcome to AI WebForge</h1>
+            <img src="https://picsum.photos/id/1015/600/400" alt="Futuristic Cityscape" aria-label="Futuristic cityscape image">
+            <p>Revolutionizing website creation in a dystopian future.  Our AI-driven platform generates and deploys websites faster and more efficiently than any competitor.</p>
+            <button class="button" onclick="startProcess()" aria-label="Start website generation">Get Started</button>
+             <div class="tooltip">Hover me
+                <span class="tooltiptext">This is a tooltip!</span>
+            </div>
+        </section>
+
+        <section>
+            <h2>Key Features</h2>
+            <img src="https://picsum.photos/id/1025/600/400" alt="AI Interface" aria-label="AI interface image">
+            <ul>
+                <li><strong>Autonomous Generation:</strong> AI algorithms create complete website structures.</li>
+                <li><strong>Real-time Deployment:</strong> Instant publishing with optimized performance.</li>
+                <li><strong>Adaptive Design:</strong> Responsive layouts for all devices.</li>
+                <li><strong>Competitive Edge:</strong> Outperform rivals in the corporate race for AI dominance.</li>
+            </ul>
+              <button class="button" onclick="showModal()" aria-label="Show details">Show Details</button>
+
+        </section>
+
+        <section>
+            <h2>User Dashboard</h2>
+            <img src="https://picsum.photos/id/1060/600/400" alt="User Dashboard" aria-label="User dashboard image">
+            <p>Monitor your website's performance, track deployment status, and manage your AI configurations.</p>
+            <label for="website-name">Website Name:</label>
+            <input type="text" id="website-name" name="website-name" placeholder="Enter website name" aria-label="Enter website name">
+
+            <label for="website-description">Description:</label>
+            <textarea id="website-description" name="website-description" placeholder="Enter website description" aria-label="Enter website description"></textarea>
+
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 AI WebForge. All rights reserved.  A product of [Your Corporation Name].</p>
+    </footer>
+
+     <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Feature Details</h2>
+            <p>Here are some more details about our amazing features:</p>
+            <ul>
+                <li>AI-powered content generation</li>
+                <li>Automated SEO optimization</li>
+                <li>Real-time analytics</li>
+                <li>24/7 customer support</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Code
+
+        function startProcess() {
+            let progressBar = document.getElementById('progress-bar');
+            let width = 0;
+            let interval = setInterval(frame, 20); // Adjust for speed
+
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    alert('Website generation complete!'); // Simple completion notification
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                    progressBar.setAttribute('aria-valuenow', width);
+                }
+            }
+        }
+        function showModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // Close the modal if the user clicks outside of it
+        window.onclick = function(event) {
+            let modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Example of basic keyboard navigation enhancement
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
